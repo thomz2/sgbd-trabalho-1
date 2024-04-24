@@ -28,8 +28,10 @@ int main () {
     Bucket* bucket = Bucket::create("teste.txt", 3, {
         {1, 2013},
         {2, 2014},
-        {3, 2015},
+        // {3, 2015},
     });
+
+    bucket->insert({4, 2016});
 
     // Bucket* bucket = Bucket::read("teste.txt");
 

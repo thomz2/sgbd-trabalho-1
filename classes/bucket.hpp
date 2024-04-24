@@ -18,7 +18,13 @@ public:
     string ref;
     vector<pair<int,int>> values;
 
-    Bucket(int initialPl, string ref,  const vector<pair<int,int>>& values = {}) : pl(initialPl), ref(ref), values(values) {}
+    Bucket(int initialPl, string ref,  const vector<pair<int,int>>& values = {}) : pl(initialPl), ref(ref) {
+        if (values.size() > CAPACIDADE_BUCKET) {
+            cout << "Erro ao criar bucket: overflow, " << values.size() << endl;
+            return;
+        }
+        this->values = values;
+    }
 
     bool is_full() const {
         return values.size() >= CAPACIDADE_BUCKET;
@@ -26,15 +32,26 @@ public:
 
     bool insert(pair<int,int> value) {
         if (is_full()) {
+            // Logica para criar outro bucket
+            cout << "Necessario criar outro bucket!" << endl;
             return false;
         }
         values.push_back(value);
         return true;
     }
 
-    bool contains(int key) const {
+    bool containsPk(int key) const {
         for (pair<int,int> value : values) {
             if (value.first == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool containsYear(int year) const {
+        for (pair<int,int> value : values) {
+            if (value.second == year) {
                 return true;
             }
         }

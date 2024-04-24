@@ -32,11 +32,12 @@ public:
 
     bool insert(pair<int,int> value) {
         if (is_full()) {
-            // Logica para criar outro bucket
+            // Codar logica para criar outro bucket
             cout << "Necessario criar outro bucket!" << endl;
             return false;
         }
         values.push_back(value);
+        this->write();
         return true;
     }
 
@@ -58,27 +59,29 @@ public:
         return false;
     }
 
-    void clear() {
-        values.clear();
-    }
-
-    static Bucket* create(const string &filename, int pl = 3, const vector<pair<int,int>>& values = {}) {
-
-        Bucket* bucket = new Bucket(pl, filename, values);
-
-        ofstream outfile("buckets/" + filename);
+    bool write() {
+        ofstream outfile("buckets/" + this->ref);
         if (!outfile.is_open()) {
-            cout << "Erro ao criar arquivo: " << filename << endl;
-            return nullptr;
+            cout << "Erro ao criar/abrir arquivo: " << this->ref << endl;
+            return false;
         }
 
-        for (const auto &key : bucket->values) {
+        for (const auto &key : this->values) {
             outfile << key.first << "," << key.second << "\n";
         }
 
         outfile.close();
 
-        return bucket;
+        return true;
+    } 
+
+    void clear() {
+        values.clear();
+    }
+
+    static Bucket* create(const string &filename, int pl = 3, const vector<pair<int,int>>& values = {}) {
+        Bucket* bucket = new Bucket(pl, filename, values);
+        return bucket->write() ? bucket : nullptr;
     }
 
     static Bucket* read(const string &filename) {
@@ -102,6 +105,7 @@ public:
                 values.push_back({id, ano});
             } else {
                 cout << "Formato inválido na linha: " << line << endl;
+                return nullptr;
             }
         }
 

@@ -1,8 +1,11 @@
+#include "tuple.hpp"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
 #include <algorithm>
+
+
 
 using namespace std;
 
@@ -19,5 +22,9 @@ class Directory {
 };
 
 int main () {
-
+    string input = "1,22.03,2004";
+    Pedido pedido;
+    pedido.fromString(input);
+    cout << pedido.toString() << endl;
+    cout << "hello world" << endl;
 }

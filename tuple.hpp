@@ -24,7 +24,7 @@ public:
     string toString() {
         char virgula = ',';
         ostringstream oss;
-        oss << setprecision(2) 
+        oss << fixed << setprecision(2) 
             << chave << virgula << valor << virgula << ano << endl;
         return oss.str();
     }

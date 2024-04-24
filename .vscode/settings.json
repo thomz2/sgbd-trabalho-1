@@ -1,5 +1,15 @@
 {
     "files.associations": {
-        "iosfwd": "cpp"
+        "*.embeddedhtml": "html",
+        "iosfwd": "cpp",
+        "cmath": "cpp",
+        "vector": "cpp",
+        "utility": "cpp",
+        "stdexcept": "cpp",
+        "xstring": "cpp",
+        "iomanip": "cpp",
+        "ios": "cpp",
+        "fstream": "cpp",
+        "ostream": "cpp"
     }
 }

@@ -1,18 +1,15 @@
-#include "tuple.hpp"
+#include "classes/tuple.hpp"
+#include "classes/bucket.hpp"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
 #include <algorithm>
-
-
+#include <fstream>
+#include <sstream>
+#include <filesystem> 
 
 using namespace std;
-
-class Bucket {
-    int pl;
-    string ref;
-};
 
 class Directory {
     int pg;
@@ -27,4 +24,14 @@ int main () {
     pedido.fromString(input);
     cout << pedido.toString() << endl;
     cout << "hello world" << endl;
+
+    Bucket* bucket = Bucket::create("teste.txt", 3, {
+        {1, 2013},
+        {2, 2014},
+        {3, 2015},
+    });
+
+    // Bucket* bucket = Bucket::read("teste.txt");
+
+    cout << bucket->toString() << endl;
 }

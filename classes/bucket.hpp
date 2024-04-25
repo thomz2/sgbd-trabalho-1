@@ -27,6 +27,10 @@ public:
         this->values = values;
     }
 
+    ~Bucket() {
+        values.clear();
+    }
+
     bool is_full() const {
         return values.size() >= CAPACIDADE_BUCKET;
     }

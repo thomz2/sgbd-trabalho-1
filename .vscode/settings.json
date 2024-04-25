@@ -11,6 +11,10 @@
         "ios": "cpp",
         "fstream": "cpp",
         "ostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp",
+        "sstream": "cpp",
+        "filesystem": "cpp",
+        "format": "cpp"
     }
 }

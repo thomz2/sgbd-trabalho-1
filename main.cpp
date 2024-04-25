@@ -12,25 +12,30 @@
 
 using namespace std;
 
-void setProfundidadeGlobal(int prof) {
-    cout << "PF: " << prof << endl;
-}
-
-void commandINSERIR(int ano, int global, int local) {
+void commandINSERIR(Directory* diretorio, int ano) {
     cout << "INS" << endl;
 }
 
-void commandREMOVER(int ano, int quant, int global, int local) {
+void commandREMOVER(Directory* diretorio, int ano) {
     cout << "REM" << endl;
 }
 
-void commandBUSCAR(int ano, int quant) {
+void commandBUSCAR(Directory* diretorio, int ano) {
     cout << "BUS" << endl;
 }
 
 
+int main () {
+    // Directory* diretorio = new Directory(2);
+    // diretorio->createBuckets();
+    // diretorio->inserirValor(2013);
+    // diretorio->inserirValor(2005);
+    // diretorio->inserirValor(2222);
+    // // readInputFile();
+    // readInputFile(diretorio);
 
-int readInputFile() {
+    Directory* diretorio;
+
     ifstream file("in.txt");
     if (!file.is_open()) {
         std::cerr << "Erro ao abrir o arquivo." << std::endl;
@@ -47,49 +52,32 @@ int readInputFile() {
             if (!(iss >> intProf)) {
                 std::cerr << "Erro ao converter para inteiro." << std::endl; return 1;
             }
-            setProfundidadeGlobal(intProf);
+            // setProfundidadeGlobal(intProf);
+            diretorio = new Directory(intProf);
         }
 
         if (line.compare(0, 4, "INS:")) {
-            int slash = line.find('/');
-            int comma = line.find(',');
-            string xStr = line.substr(4, 4); //anos tem tamanho 4 digitos
-            string globalStr = line.substr(slash + 1, comma - slash - 1);
-            string localStr = line.substr(comma + 1); 
-
-            int x, global, local;
+            int colon = line.find(':');
+            string xStr = line.substr(colon+1);
+            int x;
             istringstream(xStr) >> x;
-            istringstream(globalStr) >> global;
-            istringstream(localStr) >> local;
-            commandINSERIR(x, global, local);
+            commandINSERIR(diretorio, x);
         }
 
         else if (line.compare(0, 4, "REM:")) {
-            int slash = line.find('/');
-            int comma = line.find(',');
-            int comma2 = line.find(',', comma+1);
-            string xStr = line.substr(4, 4); //anos tem tamanho 4 digitos
-            string quantStr = line.substr(slash + 1, slash - comma - 1);
-            string globalStr = line.substr(comma + 1, comma2 - comma - 1);
-            string localStr = line.substr(comma2 + 1); 
-
-            int x, quant, global, local;
+            int colon = line.find(':');
+            string xStr = line.substr(colon+1);
+            int x;
             istringstream(xStr) >> x;
-            istringstream(quantStr) >> quant;
-            istringstream(globalStr) >> global;
-            istringstream(localStr) >> local;
-            commandREMOVER(x, quant, global, local);
+            commandREMOVER(diretorio, x);
         }
 
         else if (line.compare(0, 4, "BUS:")) {
-            int slash = line.find('/');
-            string xStr = line.substr(4, 4); //anos tem tamanho 4 digitos
-            string quantStr = line.substr(slash + 1);
-
-            int x, quant;
+            int colon = line.find(':');
+            string xStr = line.substr(colon+1);
+            int x;
             istringstream(xStr) >> x;
-            istringstream(quantStr) >> quant;
-            commandBUSCAR(x, quant);
+            commandBUSCAR(diretorio, x);
         }
 
         index += 1;
@@ -97,33 +85,4 @@ int readInputFile() {
     }
 
     return 0;
-}
-
-int main () {
-    // string input = "1,22.03,2004";
-    // Pedido pedido;
-    // pedido.fromString(input);
-    // cout << pedido.toString() << endl;
-    // cout << "hello world" << endl;
-
-    // Bucket* bucket = Bucket::create("teste.txt", 3, {
-    //     {1, 2013},
-    //     {2, 2014},
-    //     {3, 2015},
-    // });
-
-    // bucket->insert({4, 2016});
-
-    // Bucket* bucket = Bucket::read("teste.txt");
-
-    // cout << bucket->toString() << endl;
-
-    Directory* diretorio = new Directory(2);
-
-    diretorio->createBuckets();
-    diretorio->inserirValor(2013);
-    diretorio->inserirValor(2005);
-    diretorio->inserirValor(2222);
-
-    // readInputFile();
 }

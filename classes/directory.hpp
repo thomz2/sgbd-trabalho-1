@@ -1,6 +1,7 @@
 #pragma once
 #include "bucket.hpp"
 #include <vector>
+#include <set>
 
 template <typename t1, typename t2, typename t3>
 struct tripla {
@@ -127,7 +128,7 @@ public:
                 ind.third = ref;
 
                 // Transformando para string com o numero de bits especificado
-                refStr = to_binary(ref, profundidade_local) + ".txt";
+                refStr = to_binary(ref, ind.second) + ".txt";
                 cout << "indice encontrado: " << ind.first 
                      << " | profundidade local: " << ind.second 
                      << " | ref: " << refStr 
@@ -146,15 +147,133 @@ public:
         if (this->bucketAtual->isFull()) {
             // Caso em que duplica o bucket
             cout << "Caso em que duplica o bucket" << endl;
+            delete this->bucketAtual;
+            this->duplicarBucket(indice, ano);
         } else {
             for (auto value : values) {
                 bool inseriu = this->bucketAtual->insert({value.first, value.third});
                 if (!inseriu) {
                     // Caso em que duplica o bucket
                     cout << "Caso em que duplica o bucket" << endl;
+                    delete this->bucketAtual;
+                    this->duplicarBucket(indice, ano);
+                } else {
+                    // Inseriu no bucket, e agora?
                 }
             }
         }
+    }
+
+    void duplicarBucket(int dirIndex, int ano) {
+        // Indice a ser duplicado
+        tripla<int,int,int> ind = this->diretorio[dirIndex];
+
+        // Antiga referencia ao bucket
+        int oldRefBucket = ind.third;
+
+        this->diretorio[dirIndex].second++; // Extendendo a profundidade local
+        int newPL = this->diretorio[dirIndex].second;
+
+        // Caso passe a profundidade global, remodelar o hash
+        if (newPL > this->pg) {
+            int newInd = (1 << this->pg) | ind.first;
+            int oldInd = ind.first;
+
+            string filename = to_binary(oldRefBucket, this->pg) + ".txt";
+            this->bucketAtual = Bucket::read(filename);
+            vector<pair<int,int>> oldBucketValues = this->bucketAtual->values;
+            this->bucketAtual->deleteBucket();
+            delete this->bucketAtual;
+
+            // Passando valores para copia do bucket antigo
+            this->bucketAtual = Bucket::create("0" + filename, newPL, {});
+            cout << "Arquivo" << this->bucketAtual->ref << " criado" << endl;
+            delete this->bucketAtual;
+
+            // E cria um bucket novo tambem
+            this->bucketAtual = Bucket::create("1" + filename, newPL, {});
+            cout << "Arquivo" << this->bucketAtual->ref << " criado" << endl;
+            delete this->bucketAtual;
+
+            // Finalmente, aumenta a profundidade global
+            this->pg++;
+
+            int dirSize = (int)diretorio.size();
+
+            for (int i = 0; i < dirSize; ++i) {
+                // Se for o indice duplicado
+                if (i+dirSize == newInd) {
+                    diretorio.push_back({dirSize+i, newPL, dirSize+i});
+                }
+                // Caso nao seja, pega a copia
+                else
+                    diretorio.push_back({i+dirSize, diretorio[i].second, diretorio[i].third});
+            }
+
+            set<int> insertedYears;
+            // Reinserir o oldBucketValues
+            for (int i = 0; i < oldBucketValues.size(); ++i) {
+                // Inserindo ano para nao precisar inserir de novo
+                int anoAtual = oldBucketValues[i].second;
+                if (insertedYears.count(anoAtual) <= 0) {
+                    insertedYears.insert(anoAtual);
+                    this->inserirValor(anoAtual);
+                }
+            }
+
+        } else {
+            // Renomear o arquivo apenas
+
+            // Pegando dados do txt
+            string filename = to_binary(oldRefBucket, newPL-1) + ".txt";
+            this->bucketAtual = Bucket::read(filename);
+            vector<pair<int,int>> oldBucketValues = this->bucketAtual->values;
+            this->bucketAtual->deleteBucket();
+            delete this->bucketAtual;
+
+            filename = to_binary(ind.first & ((1 << newPL) -1), newPL) + ".txt";
+            this->bucketAtual = Bucket::create(filename, newPL, {});
+            delete this->bucketAtual;
+
+            set<int> insertedYears;
+            // Reinserir o oldBucketValues
+            for (int i = 0; i < oldBucketValues.size(); ++i) {
+                // Inserindo ano para nao precisar inserir de novo
+                int anoAtual = oldBucketValues[i].second;
+                if (insertedYears.count(anoAtual) <= 0) {
+                    insertedYears.insert(anoAtual);
+                    this->inserirValor(anoAtual);
+                }
+            }
+        }
+
+        // for (int i = 0; i < this->diretorio.size(); ++i) {
+        //     if (this->diretorio[i].third == oldRefBucket) {
+        //         this->diretorio[i].second++;
+        //     }
+        // }
+
+        // cout << "Tentando inserir novamente o " 
+        //      << ano << ", informacoes: "
+        //      << this->toString();
+        this->inserirValor(ano);
+    }
+
+    string toString() const {
+        std::ostringstream oss;
+
+        // Mostrar a profundidade global do diretório
+        oss << "Profundidade global: " << pg << "\n";
+
+        // Mostrar as entradas do diretório
+        oss << "Entradas do diretório:\n";
+        for (const auto& entry : diretorio) {
+            oss << "Índice: " << entry.first
+                << ", Profundidade local: " << entry.second
+                << ", Referência: " << entry.third << "\n";
+        }
+
+        return oss.str(); // Retorna a representação como uma string
     }
 
 };

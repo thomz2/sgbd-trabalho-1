@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
-#include <filesystem> 
+#include <stdio.h>
 
 
 using namespace std;
@@ -51,6 +51,17 @@ public:
         return true;
     }
 
+    void deleteBucket() {
+        // Deletar o arquivo associado a este bucket
+        string path = "buckets/" + this->ref; // Caminho para o arquivo
+        int removeu = remove(path.c_str());
+        if (removeu == 0) { // Verificar se o arquivo existe
+            cout << "Arquivo " << this->ref << " foi removido." << endl;
+        } else {
+            cout << "Arquivo " << this->ref << " não encontrado." << endl;
+        }
+    }
+
     bool containsPk(int key) const {
         for (pair<int,int> value : values) {
             if (value.first == key) {
@@ -85,10 +96,6 @@ public:
         return true;
     } 
 
-    void clear() {
-        values.clear();
-    }
-
     static Bucket* create(const string &filename, int pl = 3, const vector<pair<int,int>>& values = {}) {
         Bucket* bucket = new Bucket(pl, filename, values);
         return bucket->write() ? bucket : nullptr;
@@ -106,7 +113,7 @@ public:
         vector<pair<int,int>> values;
         string line;
 
-        while (std::getline(infile, line)) {
+        while (getline(infile, line)) {
             stringstream ss(line);
             int id, ano;
 

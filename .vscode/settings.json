@@ -10,6 +10,7 @@
         "iomanip": "cpp",
         "ios": "cpp",
         "fstream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "string": "cpp"
     }
 }

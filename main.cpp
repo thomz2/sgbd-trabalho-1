@@ -106,21 +106,24 @@ int main () {
     // cout << pedido.toString() << endl;
     // cout << "hello world" << endl;
 
-    Bucket* bucket = Bucket::create("teste.txt", 3, {
-        {1, 2013},
-        {2, 2014},
-        {3, 2015},
-    });
+    // Bucket* bucket = Bucket::create("teste.txt", 3, {
+    //     {1, 2013},
+    //     {2, 2014},
+    //     {3, 2015},
+    // });
 
-    bucket->insert({4, 2016});
+    // bucket->insert({4, 2016});
 
     // Bucket* bucket = Bucket::read("teste.txt");
 
-    cout << bucket->toString() << endl;
+    // cout << bucket->toString() << endl;
 
-    Directory* diretorio = new Directory(3);
+    Directory* diretorio = new Directory(2);
 
     diretorio->createBuckets();
+    diretorio->inserirValor(2013);
+    diretorio->inserirValor(2005);
+    diretorio->inserirValor(2222);
 
-    readInputFile();
+    // readInputFile();
 }

@@ -31,18 +31,23 @@ public:
         values.clear();
     }
 
-    bool is_full() const {
+    bool isFull() const {
         return values.size() >= CAPACIDADE_BUCKET;
     }
 
     bool insert(pair<int,int> value) {
-        if (is_full()) {
-            // Codar logica para criar outro bucket
+        if (isFull()) {
+            // TODO: Codar logica para criar outro bucket
             cout << "Necessario criar outro bucket!" << endl;
             return false;
         }
         values.push_back(value);
-        this->write();
+        bool escreveu = this->write();
+        if (!escreveu) {
+            // Retira o valor inserido no vetor e retorna false
+            values.pop_back();
+            return false;
+        }
         return true;
     }
 

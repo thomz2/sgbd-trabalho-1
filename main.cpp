@@ -1,3 +1,5 @@
+// -std=c++17
+
 #include "classes/tuple.hpp"
 #include "classes/bucket.hpp"
 #include "classes/directory.hpp"
@@ -33,7 +35,7 @@ void commandBUSCAR(int ano, int quant) {
 int readInputFile() {
     ifstream file("in.txt");
     if (!file.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo." << std::endl;
+        cout << "Erro ao abrir o arquivo." << endl;
         return 1;
     }
 
@@ -43,9 +45,9 @@ int readInputFile() {
         if (index == 0) { // PG/<prof global>
             string strProf = line.substr(line.find('/') + 1);
             int intProf; // Converta a string para um inteiro
-            std::istringstream iss(strProf);
+            istringstream iss(strProf);
             if (!(iss >> intProf)) {
-                std::cerr << "Erro ao converter para inteiro." << std::endl; return 1;
+                cout << "Erro ao converter para inteiro." << endl; return 1;
             }
             setProfundidadeGlobal(intProf);
         }
@@ -118,12 +120,18 @@ int main () {
 
     // cout << bucket->toString() << endl;
 
-    Directory* diretorio = new Directory(2);
+    Directory* diretorio = new Directory(1);
 
     diretorio->createBuckets();
     diretorio->inserirValor(2013);
-    diretorio->inserirValor(2005);
-    diretorio->inserirValor(2222);
-
+    diretorio->inserirValor(2005); // Caso especifico
+    // diretorio->inserirValor(2222); // Caso que nao existe o 2022
+    diretorio->inserirValor(2012);
+    diretorio->inserirValor(2020);
+    diretorio->inserirValor(2024);
+    // diretorio->inserirValor(1998);
+    diretorio->inserirValor(1995);
     // readInputFile();
+
+    cout << diretorio->toString() << endl;
 }

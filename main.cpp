@@ -36,15 +36,20 @@ int main () {
 
     Directory* diretorio;
 
-    ifstream file("in.txt");
-    if (!file.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo." << std::endl;
+    ifstream fileIn("in.txt");
+    if (!fileIn.is_open()) {
+        std::cerr << "Erro ao abrir o arquivo IN." << std::endl;
+        return 1;
+    }
+    ofstream fileOut("out.txt");
+    if (!fileOut.is_open()) {
+        std::cerr << "Erro ao abrir o arquivo OUT." << std::endl;
         return 1;
     }
 
     int index = 0;
     string line;
-    while (getline(file, line)) {
+    while (getline(fileIn, line)) {
         if (index == 0) { // PG/<prof global>
             string strProf = line.substr(line.find('/') + 1);
             int intProf; // Converta a string para um inteiro
@@ -54,6 +59,7 @@ int main () {
             }
             // setProfundidadeGlobal(intProf);
             diretorio = new Directory(intProf);
+            fileOut << line << endl;
         }
 
         if (line.compare(0, 4, "INS:")) {
@@ -62,6 +68,8 @@ int main () {
             int x;
             istringstream(xStr) >> x;
             commandINSERIR(diretorio, x);
+            int global = 1; int local = 1;
+            fileOut << "INS:" << x << '/' << global << ',' << local << endl;
         }
 
         else if (line.compare(0, 4, "REM:")) {
@@ -70,6 +78,9 @@ int main () {
             int x;
             istringstream(xStr) >> x;
             commandREMOVER(diretorio, x);
+            int global = 1; int local = 1;
+            int numRemovidos = 2;
+            fileOut << "INS:" << x << '/' << numRemovidos << ',' << global << ',' << local << endl;
         }
 
         else if (line.compare(0, 4, "BUS:")) {
@@ -78,11 +89,16 @@ int main () {
             int x;
             istringstream(xStr) >> x;
             commandBUSCAR(diretorio, x);
+            int numSelecionados = 2;
+            fileOut << "INS:" << x << '/' << numSelecionados << endl;
         }
 
         index += 1;
         continue;
     }
+
+    fileIn.close();
+    fileOut.close();
 
     return 0;
 }

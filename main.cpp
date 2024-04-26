@@ -19,8 +19,8 @@ using namespace std;
 //     //input and 0b_111
 // }
 
-void commandINSERIR(Directory* diretorio, int ano) {
-    diretorio->inserirValor(ano);
+bool commandINSERIR(Directory* diretorio, int ano) {
+    return diretorio->inserirValor(ano);
 }
 
 tripla<int,int,int> commandREMOVER(Directory* diretorio, int ano) {
@@ -29,7 +29,7 @@ tripla<int,int,int> commandREMOVER(Directory* diretorio, int ano) {
 }
 
 int commandBUSCAR(Directory* diretorio, int ano) {
-    diretorio->buscarEmBuckets(ano);
+    return diretorio->buscarEmBuckets(ano);
 }
 
 
@@ -83,13 +83,16 @@ int main () {
             string xStr = line.substr(colon+1);
             int x;
             istringstream(xStr) >> x;
-            commandINSERIR(diretorio, x);
+            bool duplicou = commandINSERIR(diretorio, x);
 
             int global = diretorio->pg;
             cout << diretorio->toString() << endl;
             int local = diretorio->diretorio[hashFunction(x, global)].second;
             
             fileOut << "INC:" << x << '/' << global << ',' << local << endl;
+            if (duplicou) {
+                fileOut << "DUP_DIR:/" << global << ',' << local << endl;
+            }
         }
 
         // REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
@@ -118,6 +121,8 @@ int main () {
         index += 1;
         continue;
     }
+
+    fileOut << "P:/" << diretorio->pg << endl;
 
     fileIn.close();
     fileOut.close();

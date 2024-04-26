@@ -76,14 +76,15 @@ public:
         cout << endl;
     }
 
-    void inserirValor(int ano) {
+    //true se duplicou, false senão
+    bool inserirValor(int ano) {
         this->refAtual = "data.csv";
 
         ifstream infile(this->refAtual); // Abrir o arquivo para leitura
 
         if (!infile.is_open()) {
             cout << "Erro ao abrir o arquivo: " << this->refAtual << endl;
-            return;
+            return false;
         }
 
         // Vetor para guardar valores a serem inseridos
@@ -105,7 +106,7 @@ public:
 
         if (!achouAlgo) {
             cout << "Nenhuma ocorrencia do ano " << ano << " encontrada" << endl;
-            return;
+            return false;
         }
 
         infile.close();
@@ -139,16 +140,17 @@ public:
 
         if (ref == -1) {
             cout << "Erro ao buscar a referencia do bucket no diretorio" << endl;
-            return;
+            return false;
         }
 
         this->bucketAtual = Bucket::read(refStr);
-
+        bool duplicou = false;
         if (this->bucketAtual->isFull()) {
             // Caso em que duplica o bucket
             cout << "Caso em que duplica o bucket" << endl;
             delete this->bucketAtual;
             this->duplicarBucket(indice, ano);
+            duplicou = true;
         } else {
             for (auto value : values) {
                 bool inseriu = this->bucketAtual->insert({value.first, value.third});
@@ -157,11 +159,13 @@ public:
                     cout << "Caso em que duplica o bucket" << endl;
                     delete this->bucketAtual;
                     this->duplicarBucket(indice, ano);
+                    duplicou = true;
                 } else {
                     // Inseriu no bucket, e agora? 
                 }
             }
         }
+        return duplicou;
     }
 
     int buscarEmBuckets(int ano) {

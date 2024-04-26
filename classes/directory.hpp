@@ -164,7 +164,7 @@ public:
         }
     }
 
-    int buscarBuckets(int ano) {
+    int buscarEmBuckets(int ano) {
         int anoHashed = hashFunction(ano, pg);
         int ref = diretorio[anoHashed].third;
         int profLocal = diretorio[anoHashed].second;
@@ -178,6 +178,25 @@ public:
         }
         delete bucketAtual;
         return count;
+    }
+
+    // REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
+    tripla<int,int,int> removerEmBuckets(int ano) {
+        int anoHashed = hashFunction(ano, pg);
+        int ref = diretorio[anoHashed].third;
+        int profLocal = diretorio[anoHashed].second;
+        string refBinary = to_binary(ref, profLocal);
+        string filename = refBinary + ".txt";
+
+        bucketAtual = Bucket::read(filename);
+        int count = 0;
+        for (pair<int, int> p : bucketAtual->values) {
+            if (p.second == ano) {
+                count += bucketAtual->deleteYear(ano);
+            }
+        }
+        delete bucketAtual;
+        return {count, this->pg, profLocal};
     }
 
     void duplicarBucket(int dirIndex, int ano) {

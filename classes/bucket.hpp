@@ -51,6 +51,21 @@ public:
         return true;
     }
 
+    int deleteYear(int ano) {
+        int count = 0;
+        for (int i = 0; i < values.size(); ++i) {
+            if (values[i].second == ano) {
+                values.erase(values.begin() + i);
+                count++;
+            }
+        }
+        bool escreveu = this->write();
+        if (!escreveu) {
+            return -1000000;
+        }
+        return count;
+    }
+
     void deleteBucket() {
         // Deletar o arquivo associado a este bucket
         string path = "buckets/" + this->ref; // Caminho para o arquivo

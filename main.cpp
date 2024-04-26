@@ -23,12 +23,13 @@ void commandINSERIR(Directory* diretorio, int ano) {
     diretorio->inserirValor(ano);
 }
 
-void commandREMOVER(Directory* diretorio, int ano) {
-    cout << "REM" << endl;
+tripla<int,int,int> commandREMOVER(Directory* diretorio, int ano) {
+    // REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
+    return diretorio->removerEmBuckets(ano);
 }
 
 int commandBUSCAR(Directory* diretorio, int ano) {
-    diretorio->buscarBuckets(ano);
+    diretorio->buscarEmBuckets(ano);
 }
 
 
@@ -91,16 +92,17 @@ int main () {
             fileOut << "INC:" << x << '/' << global << ',' << local << endl;
         }
 
+        // REM:x/<qtd de tuplas removidas>,<profundidade global>,<profundidade local>
         else if (line.compare(0, 4, "REM:") == 0) {
-            cout << "Linha: " << line << endl;
+            // cout << "Linha: " << line << endl;
             int colon = line.find(':');
             string xStr = line.substr(colon+1);
             int x;
             istringstream(xStr) >> x;
-            commandREMOVER(diretorio, x);
-            int global = 1; int local = 1;
-            int numRemovidos = 2;
-            fileOut << "REM:" << x << '/' << numRemovidos << ',' << global << ',' << local << endl;
+            tripla<int,int,int> info = commandREMOVER(diretorio, x);
+            // int global = 1; int local = 1;
+            // int numRemovidos = 2;
+            fileOut << "REM:" << x << '/' << info.first << ',' << info.second << ',' << info.third << endl;
         }
 
         else if (line.compare(0, 4, "BUS:") == 0) {

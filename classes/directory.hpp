@@ -134,7 +134,7 @@ public:
                      << " | ref: " << refStr 
                      << endl << endl;
                 break;
-            }
+            } 
         }
 
         if (ref == -1) {
@@ -158,7 +158,7 @@ public:
                     delete this->bucketAtual;
                     this->duplicarBucket(indice, ano);
                 } else {
-                    // Inseriu no bucket, e agora?
+                    // Inseriu no bucket, e agora? 
                 }
             }
         }

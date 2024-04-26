@@ -14,16 +14,21 @@
 
 using namespace std;
 
+// int hashFunction(int input, int bits = 3) {
+//     return input & ((1 << bits) - 1);
+//     //input and 0b_111
+// }
+
 void commandINSERIR(Directory* diretorio, int ano) {
-    cout << "INS" << endl;
+    diretorio->inserirValor(ano);
 }
 
 void commandREMOVER(Directory* diretorio, int ano) {
     cout << "REM" << endl;
 }
 
-void commandBUSCAR(Directory* diretorio, int ano) {
-    cout << "BUS" << endl;
+int commandBUSCAR(Directory* diretorio, int ano) {
+    diretorio->buscarBuckets(ano);
 }
 
 
@@ -68,20 +73,26 @@ int main () {
             }
             // setProfundidadeGlobal(intProf);
             diretorio = new Directory(intProf);
+            diretorio->createBuckets();
             fileOut << line << endl;
         }
 
-        if (line.compare(0, 4, "INS:")) {
+        else if (line.compare(0, 4, "INC:")) {
             int colon = line.find(':');
             string xStr = line.substr(colon+1);
             int x;
             istringstream(xStr) >> x;
             commandINSERIR(diretorio, x);
-            int global = 1; int local = 1;
-            fileOut << "INS:" << x << '/' << global << ',' << local << endl;
+
+            int global = diretorio->pg;
+            cout << diretorio->toString() << endl;
+            int local = diretorio->diretorio[hashFunction(x, global)].second;
+            
+            fileOut << "INC:" << x << '/' << global << ',' << local << endl;
         }
 
         else if (line.compare(0, 4, "REM:")) {
+            cout << "Linha: " << line << endl;
             int colon = line.find(':');
             string xStr = line.substr(colon+1);
             int x;
@@ -89,7 +100,7 @@ int main () {
             commandREMOVER(diretorio, x);
             int global = 1; int local = 1;
             int numRemovidos = 2;
-            fileOut << "INS:" << x << '/' << numRemovidos << ',' << global << ',' << local << endl;
+            fileOut << "REM:" << x << '/' << numRemovidos << ',' << global << ',' << local << endl;
         }
 
         else if (line.compare(0, 4, "BUS:")) {
@@ -97,9 +108,9 @@ int main () {
             string xStr = line.substr(colon+1);
             int x;
             istringstream(xStr) >> x;
-            commandBUSCAR(diretorio, x);
-            int numSelecionados = 2;
-            fileOut << "INS:" << x << '/' << numSelecionados << endl;
+            // commandBUSCAR(diretorio, x);
+            int numSelecionados = commandBUSCAR(diretorio, x);
+            fileOut << "BUS:" << x << '/' << numSelecionados << endl;
         }
 
         index += 1;

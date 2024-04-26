@@ -77,7 +77,7 @@ int main () {
             fileOut << line << endl;
         }
 
-        else if (line.compare(0, 4, "INC:")) {
+        else if (line.compare(0, 4, "INC:") == 0) {
             int colon = line.find(':');
             string xStr = line.substr(colon+1);
             int x;
@@ -91,7 +91,7 @@ int main () {
             fileOut << "INC:" << x << '/' << global << ',' << local << endl;
         }
 
-        else if (line.compare(0, 4, "REM:")) {
+        else if (line.compare(0, 4, "REM:") == 0) {
             cout << "Linha: " << line << endl;
             int colon = line.find(':');
             string xStr = line.substr(colon+1);
@@ -103,7 +103,7 @@ int main () {
             fileOut << "REM:" << x << '/' << numRemovidos << ',' << global << ',' << local << endl;
         }
 
-        else if (line.compare(0, 4, "BUS:")) {
+        else if (line.compare(0, 4, "BUS:") == 0) {
             int colon = line.find(':');
             string xStr = line.substr(colon+1);
             int x;
